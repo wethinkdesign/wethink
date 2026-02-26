@@ -212,7 +212,7 @@ export default function Home() {
         <div className="hero-bg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1920&q=80"
+            src="/landing.jpg"
             alt="Interior design hero"
           />
         </div>
@@ -231,7 +231,7 @@ export default function Home() {
           </a>
         </div>
         <div className="hero-scroll">
-          <span>Scroll</span>
+          <span>MORE</span>
           <div className="hero-scroll-line" />
         </div>
       </section>
@@ -243,7 +243,7 @@ export default function Home() {
             <div className="about-image">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80"
+                src="/cover.jpg"
                 alt="WeThink studio"
               />
             </div>
