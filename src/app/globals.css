@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap');
-
 :root {
   /* Colors */
   --bg-primary: #0a0a0a;
@@ -16,9 +14,9 @@
   --border-hover: rgba(196, 168, 130, 0.25);
 
   /* Typography */
-  --font-display: 'Cormorant Garamond', serif;
-  --font-body: 'Inter', 'Noto Sans TC', sans-serif;
-  --font-chinese: 'Noto Sans TC', sans-serif;
+  --font-display: var(--font-display), serif;
+  --font-body: var(--font-body), var(--font-chinese), sans-serif;
+  --font-chinese: var(--font-chinese), sans-serif;
 
   /* Spacing */
   --section-padding: 120px 0;
@@ -225,10 +223,19 @@ button {
   z-index: 0;
 }
 
-.hero-bg img {
-  width: 100%;
-  height: 100%;
+.object-cover {
+  width: 100% !important;
+  height: 100% !important;
   object-fit: cover;
+}
+
+.object-contain {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}
+
+.hero-bg .object-cover {
   filter: brightness(0.35) saturate(0.8);
 }
 
@@ -382,14 +389,11 @@ button {
   aspect-ratio: 3/4;
 }
 
-.about-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.about-image .object-cover {
   transition: transform 0.8s var(--ease-out);
 }
 
-.about-image:hover img {
+.about-image:hover .object-cover {
   transform: scale(1.05);
 }
 
@@ -552,23 +556,11 @@ button {
   background: var(--bg-card);
 }
 
-.portfolio-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.portfolio-item .object-cover {
   transition: transform 0.8s var(--ease-out), filter 0.5s ease;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-.portfolio-item:hover img {
+.portfolio-item:hover .object-cover {
   transform: scale(1.08);
   filter: brightness(0.6);
 }
@@ -728,7 +720,7 @@ button {
     grid-template-columns: 1fr;
     gap: 30px;
   }
-  
+
   .process-step {
     padding: 40px 30px;
   }
@@ -986,6 +978,8 @@ button {
 .lightbox-content img {
   max-width: 100%;
   max-height: 70vh;
+  width: auto;
+  height: auto;
   object-fit: contain;
 }
 
@@ -1038,14 +1032,23 @@ button {
 }
 
 /* Lightbox info layout */
-.lightbox-info {
+.lightbox-footer {
   position: absolute;
-  bottom: -60px;
-  left: 0;
-  right: 0;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90vw;
+  max-width: 1200px;
+  z-index: 210;
+  pointer-events: none;
+}
+
+.lightbox-info {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  width: 100%;
+  pointer-events: auto;
 }
 
 .lightbox-info-text h3 {
@@ -1076,10 +1079,8 @@ button {
   display: flex;
   justify-content: center;
   gap: 8px;
-  position: absolute;
-  bottom: -90px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-top: 24px;
+  pointer-events: auto;
 }
 
 .lightbox-dot {
@@ -1193,10 +1194,6 @@ button {
     letter-spacing: 3px;
   }
 
-  .menu-toggle {
-    display: flex;
-  }
-
   .hero-content {
     padding: 0 24px;
   }
@@ -1240,12 +1237,15 @@ button {
     max-width: 85vw;
   }
 
-  .lightbox-content img {
-    max-height: 60vh;
+  .lightbox-footer {
+    bottom: 30px;
+    width: 85vw;
   }
 
   .lightbox-info {
-    bottom: -45px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 
   .lightbox-info-text h3 {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import portfolioItems, {portfolioCategory} from "./portfolioData";
 
 /* ── SVG Icons ── */
@@ -11,7 +12,7 @@ const ArrowIcon = () => (
 );
 
 const InstagramIcon = ({ size = 18 }) => (
-    <img
+    <Image
         src="/ig.svg"
         width={size}
         height={size}
@@ -20,7 +21,7 @@ const InstagramIcon = ({ size = 18 }) => (
 )
 
 const LineIcon = ({ size = 18 }) => (
-    <img
+    <Image
         src="/line.svg"
         width={size}
         height={size}
@@ -29,7 +30,7 @@ const LineIcon = ({ size = 18 }) => (
 )
 
 const ThreadsIcon = ({ size = 18 }) => (
-    <img
+    <Image
         src="/threads.svg"
         width={size}
         height={size}
@@ -210,10 +211,12 @@ export default function Home() {
       {/* ══════ HERO ══════ */}
       <section className="hero" id="hero">
         <div className="hero-bg">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/landing.jpg"
             alt="Interior design hero"
+            fill
+            priority
+            className="object-cover"
           />
         </div>
         <div className="hero-overlay" />
@@ -241,10 +244,12 @@ export default function Home() {
         <div className="container">
           <div className="about-inner fade-section">
             <div className="about-image">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/cover.jpg"
                 alt="WeThink studio"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
             <div className="about-text">
@@ -353,10 +358,15 @@ export default function Home() {
                 key={item.title}
                 className="portfolio-item"
                 onClick={() => openLightbox(idx)}
-                style={{ aspectRatio: "1/1" }}
+                style={{ aspectRatio: "1/1", position: "relative" }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.images[0]} alt={item.title} loading="lazy" />
+                <Image
+                  src={item.images[0]}
+                  alt={item.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover"
+                />
                 <div className="portfolio-item-overlay">
                   <h3>{item.title}</h3>
                   <span>{item.subtitle}</span>
@@ -542,6 +552,9 @@ export default function Home() {
               src={currentImages[lightbox.imageIndex]}
               alt={`${currentProject.title} - ${lightbox.imageIndex + 1}`}
             />
+          </div>
+
+          <div className="lightbox-footer" onClick={(e) => e.stopPropagation()}>
             <div className="lightbox-info">
               <div className="lightbox-info-text">
                 <h3>{currentProject.title}</h3>

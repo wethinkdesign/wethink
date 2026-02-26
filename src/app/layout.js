@@ -1,4 +1,26 @@
+import { Cormorant_Garamond, Inter, Noto_Sans_TC } from "next/font/google";
 import "./globals.css";
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const notoMobile = Noto_Sans_TC({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-chinese",
+  display: "swap",
+});
 
 export const metadata = {
   metadataBase: new URL("https://wethinkdesign.github.io"),
@@ -37,7 +59,7 @@ export default function RootLayout({ children }) {
   };
 
   return (
-    <html lang="zh-Hant">
+    <html lang="zh-Hant" className={`${cormorant.variable} ${inter.variable} ${notoMobile.variable}`}>
       <body>
         <script
           type="application/ld+json"
