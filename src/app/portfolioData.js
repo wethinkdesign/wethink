@@ -4,15 +4,14 @@
  * - cover: Grid 中顯示的封面圖（通常為 images 的第一張）
  * - images: 案件的所有圖片陣列
  *
- * 圖片路徑格式: /wethink/portfolio/<folder-name>/01.jpg
- * (因 next.config.mjs 設定 basePath: "/wethink"，所有靜態資源需加此前綴)
+ * 圖片路徑格式: /portfolio/<folder-name>/01.jpg
  *
  * 快速新增案件：執行 scripts/add-project.sh，詳見該檔案說明。
  */
 
 const generateImages = (id, count) => {
     return Array.from({length: count}, (_, i) =>
-        `/wethink/portfolio/${id}/${(i + 1).toString().padStart(2, '0')}.jpg`
+        `/portfolio/${id}/${(i + 1).toString().padStart(2, '0')}.jpg`
     );
 };
 

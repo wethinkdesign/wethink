@@ -1,6 +1,5 @@
 const nextConfig = {
   output: "export",
-  basePath: "/wethink",
   images: {
     unoptimized: true,
   },

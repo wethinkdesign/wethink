@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  metadataBase: new URL("https://wethinkdesign.github.io/wethink"),
+  metadataBase: new URL("https://wethinkdesign.github.io"),
   title: "WeThink 維想室內裝修設計工作室 — Wethink Design Studio",
   description:
     "WeThink 維想室內裝修設計工作室，以人為本的空間設計，打造有溫度的生活場域。提供住宅設計、商業空間、辦公空間規劃服務。",
@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
     "name": "WeThink 維想室內裝修設計工作室",
     "image": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1920&q=80",
     "description": "以人為本的空間設計，打造有溫度的生活場域。提供住宅設計、商業空間、辦公空間規劃服務。",
-    "url": "https://wethinkdesign.github.io/wethink",
+    "url": "https://wethinkdesign.github.io",
     "telephone": "+886-2-2700-1234",
     "email": "hello@wethink-design.com",
     "address": {

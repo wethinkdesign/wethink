@@ -6,6 +6,6 @@ export default function robots() {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://wethinkdesign.github.io/wethink/sitemap.xml",
+    sitemap: "https://wethinkdesign.github.io/sitemap.xml",
   };
 }

@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import portfolioItems, {portfolioCategory} from "./portfolioData";
 
-
-
 /* ── SVG Icons ── */
 const ArrowIcon = () => (
   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -14,7 +12,7 @@ const ArrowIcon = () => (
 
 const InstagramIcon = ({ size = 18 }) => (
     <img
-        src="/wethink/ig.svg"
+        src="/ig.svg"
         width={size}
         height={size}
         alt="Instagram"
@@ -23,7 +21,7 @@ const InstagramIcon = ({ size = 18 }) => (
 
 const LineIcon = ({ size = 18 }) => (
     <img
-        src="/wethink/line.svg"
+        src="/line.svg"
         width={size}
         height={size}
         alt="LINE"
@@ -32,7 +30,7 @@ const LineIcon = ({ size = 18 }) => (
 
 const ThreadsIcon = ({ size = 18 }) => (
     <img
-        src="/wethink/threads.svg"
+        src="/threads.svg"
         width={size}
         height={size}
         alt="Threads"
@@ -57,8 +55,6 @@ const PhoneIcon = () => (
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.97.36 1.92.7 2.84a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.92.34 1.87.57 2.84.7A2 2 0 0 1 22 16.92z" />
   </svg>
 );
-
-/* ── Main Page Component ── */
 
 /* ── Counter Component for Stats ── */
 const Counter = ({ end, duration = 2000, suffix = "" }) => {
@@ -105,6 +101,7 @@ const Counter = ({ end, duration = 2000, suffix = "" }) => {
   );
 };
 
+/* ── Main Page Component ── */
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
