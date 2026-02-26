@@ -190,6 +190,32 @@ button {
   width: 100%;
 }
 
+/* active nav link (scroll spy) */
+.header-nav a.active {
+  color: var(--text-primary);
+}
+
+.header-nav a.active::after {
+  width: 100%;
+}
+
+/* subtle scroll progress bar */
+.header-progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.header-progress-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent-dark), var(--accent-light));
+  transition: width 0.15s linear;
+}
+
 /* Mobile menu button */
 .menu-toggle {
   display: none;
@@ -205,6 +231,19 @@ button {
   height: 1.5px;
   background: var(--text-primary);
   transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.menu-toggle.open span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.open span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 /* ============ HERO ============ */
@@ -221,6 +260,8 @@ button {
   position: absolute;
   inset: 0;
   z-index: 0;
+  will-change: transform;
+  transition: transform 0.1s linear;
 }
 
 .object-cover {
@@ -378,7 +419,7 @@ button {
 
 .about-inner {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.88fr 1.12fr;
   gap: 80px;
   align-items: center;
 }
@@ -444,7 +485,7 @@ button {
 
 .services-header {
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 48px;
 }
 
 .services-header .section-desc {
@@ -554,6 +595,14 @@ button {
   overflow: hidden;
   cursor: pointer;
   background: var(--bg-card);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+
+.portfolio-grid.visible .portfolio-item {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .portfolio-item .object-cover {
@@ -626,11 +675,13 @@ button {
   border: 1px solid var(--border);
   padding: 16px 40px;
   transition: all 0.4s var(--ease-out);
+  transform: translateY(0);
 }
 
 .portfolio-more a:hover {
   border-color: var(--accent);
   background: rgba(196, 168, 130, 0.08);
+  transform: translateY(-2px);
 }
 
 /* ============ PROCESS ============ */
@@ -909,7 +960,7 @@ button {
 
 /* ============ FOOTER ============ */
 .footer {
-  padding: 60px 48px 40px;
+  padding: 36px;
   border-top: 1px solid var(--border);
   background: var(--bg-primary);
 }
@@ -918,7 +969,7 @@ button {
   max-width: var(--container-width);
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
@@ -981,6 +1032,21 @@ button {
   width: auto;
   height: auto;
   object-fit: contain;
+}
+
+.lightbox-image {
+  animation: lightboxImageIn 0.45s var(--ease-out) forwards;
+}
+
+@keyframes lightboxImageIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 
@@ -1084,8 +1150,8 @@ button {
 }
 
 .lightbox-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   border: 1px solid var(--text-muted);
   background: transparent;
@@ -1114,6 +1180,42 @@ button {
 .fade-section.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ============ BACK TO TOP ============ */
+.back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 90;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out), visibility 0.4s, color 0.3s ease, border-color 0.3s ease;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  color: var(--accent);
+  border-color: var(--accent-dark);
+}
+
+.back-to-top svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* ============ RESPONSIVE ============ */
@@ -1183,6 +1285,10 @@ button {
     justify-content: center;
     gap: 32px;
     z-index: 100;
+  }
+
+  .menu-toggle {
+    display: flex;
   }
 
   .header-nav.open {
@@ -1290,5 +1396,17 @@ button {
   .lightbox-close {
     top: 16px;
     right: 16px;
+  }
+
+  .back-to-top {
+    bottom: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .back-to-top svg {
+    width: 18px;
+    height: 18px;
   }
 }

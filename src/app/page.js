@@ -57,6 +57,15 @@ const PhoneIcon = () => (
   </svg>
 );
 
+/* ── Header navigation config ── */
+const NAV_ITEMS = [
+  { id: "about", label: "關於我們" },
+  { id: "services", label: "服務項目" },
+  { id: "portfolio", label: "精選作品" },
+  { id: "process", label: "設計流程" },
+  { id: "contact", label: "聯繫我們" },
+];
+
 /* ── Counter Component for Stats ── */
 const Counter = ({ end, duration = 2000, suffix = "" }) => {
   const [count, setCount] = useState(0);
@@ -106,14 +115,29 @@ const Counter = ({ end, duration = 2000, suffix = "" }) => {
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [heroParallax, setHeroParallax] = useState(0);
   const [activeFilter, setActiveFilter] = useState(portfolioCategory.All);
   const [lightbox, setLightbox] = useState({ active: false, projectIndex: 0, imageIndex: 0 });
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   /* Scroll listener for header */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 60);
+
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? Math.min((y / docHeight) * 100, 100) : 0;
+      setScrollProgress(progress);
+      setHeroParallax(y * 0.15);
+      setShowBackToTop(y > window.innerHeight * 0.6);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   /* Intersection observer for fade-in */
@@ -129,6 +153,46 @@ export default function Home() {
       { threshold: 0.12 }
     );
     document.querySelectorAll(".fade-section").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  /* Intersection observer for active section highlight */
+  useEffect(() => {
+    const sections = Array.from(document.querySelectorAll("section[id]"));
+    if (!sections.length) return;
+
+    const ratios = new Map(sections.map((s) => [s.id, 0]));
+    const thresholds = Array.from({ length: 11 }, (_, i) => i / 10);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.id;
+          if (!id) return;
+          ratios.set(id, entry.isIntersecting ? entry.intersectionRatio : 0);
+        });
+
+        let bestId = null;
+        let bestRatio = 0;
+        for (const [id, ratio] of ratios) {
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestId = id;
+          }
+        }
+
+        if (bestId) {
+          setActiveSection((prev) => (prev === bestId ? prev : bestId));
+        }
+      },
+      {
+        threshold: thresholds,
+        // account for fixed header + prefer "center-ish" of viewport
+        rootMargin: "-120px 0px -60% 0px",
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, []);
 
@@ -180,6 +244,10 @@ export default function Home() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
       {/* ══════ HEADER ══════ */}
@@ -190,15 +258,20 @@ export default function Home() {
         </a>
 
         <nav className={`header-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#about" onClick={(e) => handleNavClick(e, "about")}>關於我們</a>
-          <a href="#services" onClick={(e) => handleNavClick(e, "services")}>服務項目</a>
-          <a href="#portfolio" onClick={(e) => handleNavClick(e, "portfolio")}>精選作品</a>
-          <a href="#process" onClick={(e) => handleNavClick(e, "process")}>設計流程</a>
-          <a href="#contact" onClick={(e) => handleNavClick(e, "contact")}>聯繫我們</a>
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className={activeSection === item.id ? "active" : ""}
+              onClick={(e) => handleNavClick(e, item.id)}
+            >
+              {item.label}
+            </a>
+          ))}
         </nav>
 
         <button
-          className="menu-toggle"
+          className={`menu-toggle${mobileMenuOpen ? " open" : ""}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -206,11 +279,21 @@ export default function Home() {
           <span />
           <span />
         </button>
+
+        <div className="header-progress">
+          <div
+            className="header-progress-bar"
+            style={{ width: `${scrollProgress}%` }}
+          />
+        </div>
       </header>
 
       {/* ══════ HERO ══════ */}
       <section className="hero" id="hero">
-        <div className="hero-bg">
+        <div
+          className="hero-bg"
+          style={{ transform: `translateY(${heroParallax}px)` }}
+        >
           <Image
             src="/landing.jpg"
             alt="Interior design hero"
@@ -520,14 +603,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ══════ BACK TO TOP ══════ */}
+      <button
+        type="button"
+        className={`back-to-top${showBackToTop ? " visible" : ""}`}
+        onClick={scrollToTop}
+        aria-label="回到頂部"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 15l-6-6-6 6" />
+        </svg>
+      </button>
+
       {/* ══════ FOOTER ══════ */}
       <footer className="footer">
         <div className="footer-inner">
-          <div className="footer-brand">
-            <span className="footer-brand-en">wethink</span>
-            <span className="footer-brand-zh">維想設計</span>
-          </div>
-          <p className="footer-copy">© 2026 WeThink 維想室內設計工作室. All rights reserved.</p>
+          <p className="footer-copy">© 2026 WeThink Design Studio. All rights reserved.</p>
         </div>
       </footer>
 
