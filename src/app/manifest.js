@@ -1,3 +1,5 @@
+export const dynamic = "force-static";
+
 export default function manifest() {
   return {
     name: "WeThink 維想室內裝修設計工作室",

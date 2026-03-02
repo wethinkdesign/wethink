@@ -33,7 +33,7 @@ const portfolioItems = [
         title: "國賓大苑",
         subtitle: "K宅",
         category: portfolioCategory.Residential,
-        images: generateImages(2, 21),
+        images: generateImages(2, 20),
     },
     {
         title: "智匯學",

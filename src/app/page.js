@@ -122,6 +122,21 @@ export default function Home() {
   const [lightbox, setLightbox] = useState({ active: false, projectIndex: 0, imageIndex: 0 });
   const [imageLoading, setImageLoading] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const thumbContainerRef = useRef(null);
+
+  /* Scroll thumbnails into view when imageIndex changes */
+  useEffect(() => {
+    if (lightbox.active && thumbContainerRef.current) {
+      const activeThumb = thumbContainerRef.current.querySelector(".lightbox-thumb.active");
+      if (activeThumb) {
+        activeThumb.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    }
+  }, [lightbox.imageIndex, lightbox.active]);
 
   /* Scroll listener for header */
   useEffect(() => {
@@ -157,9 +172,9 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  /* Lock body scroll when mobile menu is open */
+  /* Lock body scroll when overlays are open */
   useEffect(() => {
-    if (mobileMenuOpen) {
+    if (mobileMenuOpen || lightbox.active) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -167,7 +182,7 @@ export default function Home() {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, lightbox.active]);
 
   /* Intersection observer for active section highlight */
   useEffect(() => {
@@ -657,70 +672,91 @@ export default function Home() {
 
       {/* ══════ LIGHTBOX ══════ */}
       {lightbox.active && currentProject && (
-        <div className={`lightbox${lightbox.active ? " active" : ""}`} onClick={closeLightbox}>
-          <button className="lightbox-close" onClick={closeLightbox}>
-            ✕
-          </button>
-          <button
-            className="lightbox-nav lightbox-prev"
-            onClick={(e) => {
-              e.stopPropagation();
-              prevImage();
-            }}
-          >
-            ‹
-          </button>
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            {imageLoading && (
-              <div className="lightbox-placeholder">
-                <div className="lightbox-spinner" />
+        <div className={`lightbox${lightbox.active ? " active" : ""}`} role="dialog" aria-modal="true">
+          <div className="lightbox-container" onClick={(e) => e.stopPropagation()}>
+            <div className="lightbox-main">
+              <button className="lightbox-close-mobile" onClick={closeLightbox}>✕</button>
+              
+              <button
+                className="lightbox-nav lightbox-prev"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevImage();
+                }}
+              >
+                ‹
+              </button>
+              
+              <div className="lightbox-image-wrapper">
+                {imageLoading && (
+                  <div className="lightbox-placeholder">
+                    <div className="lightbox-spinner" />
+                  </div>
+                )}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  key={currentImages[lightbox.imageIndex]}
+                  src={currentImages[lightbox.imageIndex]}
+                  alt={`${currentProject.title} - ${lightbox.imageIndex + 1}`}
+                  style={{ opacity: imageLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
+                  onLoad={() => setImageLoading(false)}
+                />
               </div>
-            )}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              key={currentImages[lightbox.imageIndex]}
-              src={currentImages[lightbox.imageIndex]}
-              alt={`${currentProject.title} - ${lightbox.imageIndex + 1}`}
-              style={{ opacity: imageLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
-              onLoad={() => setImageLoading(false)}
-            />
-          </div>
 
-          <div className="lightbox-footer" onClick={(e) => e.stopPropagation()}>
-            <div className="lightbox-info">
-              <div className="lightbox-info-text">
-                <h3>{currentProject.title}</h3>
-                <span>{currentProject.subtitle}</span>
-              </div>
-              <div className="lightbox-counter">
-                {lightbox.imageIndex + 1} / {currentImages.length}
+              <button
+                className="lightbox-nav lightbox-next"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextImage();
+                }}
+              >
+                ›
+              </button>
+            </div>
+
+            <div className="lightbox-sidebar">
+              <button className="lightbox-close-desktop" onClick={closeLightbox}>
+                ✕ 關閉
+              </button>
+              
+              <div className="lightbox-sidebar-content">
+                <div className="lightbox-info">
+                  <p className="section-label">Project</p>
+                  <h3>{currentProject.title}</h3>
+                  <span>{currentProject.subtitle}</span>
+                </div>
+
+                <div className="lightbox-thumbnails-header">
+                  <span>所有相片</span>
+                  <span className="lightbox-counter">
+                    {lightbox.imageIndex + 1} / {currentImages.length}
+                  </span>
+                </div>
+
+                <div className="lightbox-thumbnails-grid" ref={thumbContainerRef}>
+                  {currentImages.map((img, i) => (
+                    <button
+                      key={i}
+                      className={`lightbox-thumb-item${i === lightbox.imageIndex ? " active" : ""}`}
+                      onClick={() => {
+                        if (i === lightbox.imageIndex) return;
+                        setImageLoading(true);
+                        setLightbox((s) => ({ ...s, imageIndex: i }));
+                      }}
+                    >
+                      <Image
+                        src={img}
+                        alt={`縮圖 ${i + 1}`}
+                        fill
+                        sizes="100px"
+                        className="object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-            {currentImages.length > 1 && (
-              <div className="lightbox-dots">
-                {currentImages.map((_, i) => (
-                  <button
-                    key={i}
-                    className={`lightbox-dot${i === lightbox.imageIndex ? " active" : ""}`}
-                    onClick={() => {
-                      setImageLoading(true);
-                      setLightbox((s) => ({ ...s, imageIndex: i }));
-                    }}
-                    aria-label={`查看第 ${i + 1} 張圖片`}
-                  />
-                ))}
-              </div>
-            )}
           </div>
-          <button
-            className="lightbox-nav lightbox-next"
-            onClick={(e) => {
-              e.stopPropagation();
-              nextImage();
-            }}
-          >
-            ›
-          </button>
         </div>
       )}
     </>
