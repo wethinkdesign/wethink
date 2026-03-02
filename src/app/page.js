@@ -342,13 +342,24 @@ export default function Home() {
           className="hero-bg"
           style={{ transform: `translateY(${heroParallax}px)` }}
         >
-          <Image
-            src="/landing.jpg"
-            alt="Interior design hero"
-            fill
-            priority
-            className="object-cover"
-          />
+          <div className="hero-image-landscape">
+            <Image
+              src="/landing.jpeg"
+              alt="Interior design hero landscape"
+              fill
+              priority
+              className="object-cover"
+            />
+          </div>
+          <div className="hero-image-portrait">
+            <Image
+              src="/landing-portrait.jpeg"
+              alt="Interior design hero portrait"
+              fill
+              priority
+              className="object-cover"
+            />
+          </div>
         </div>
         <div className="hero-overlay" />
         <div className="hero-content">
@@ -693,13 +704,19 @@ export default function Home() {
                     <div className="lightbox-spinner" />
                   </div>
                 )}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   key={currentImages[lightbox.imageIndex]}
                   src={currentImages[lightbox.imageIndex]}
                   alt={`${currentProject.title} - ${lightbox.imageIndex + 1}`}
-                  style={{ opacity: imageLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
+                  fill
+                  style={{
+                    objectFit: "contain",
+                    opacity: imageLoading ? 0 : 1,
+                    transition: "opacity 0.3s ease",
+                  }}
                   onLoad={() => setImageLoading(false)}
+                  sizes="(max-width: 768px) 100vw, 80vw"
+                  priority
                 />
               </div>
 
